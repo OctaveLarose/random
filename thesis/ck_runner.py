@@ -19,12 +19,10 @@ def main():
             print(f"{OUTPUT_CSV_FILE_NAMES[0]}_{codebase_name}.csv exists, skipping. ({idx + 1}/{len(codebases_names)})")
             continue
 
-        run_ck(codebase_path)
-
-        if os.stat(OUTPUT_CSV_FILE_NAMES[0] + ".csv").st_size != 0:
+        if run_ck(codebase_path):
             move_output_csv_files(codebase_path.split("/")[-1])
         else:
-            print("Empty output CSV files, most likely due to a CK related error. Deleting.")
+            print("Error while running CK. Deleting CSV files.")
             for csv_fn in OUTPUT_CSV_FILE_NAMES:
                 if os.path.exists(csv_fn + ".csv"):
                     os.remove(csv_fn + ".csv")
@@ -32,16 +30,23 @@ def main():
         print(f"Done with {codebase_name}. ({idx + 1}/{len(codebases_names)})")
 
 
-def run_ck(codebase_path: str):
+def run_ck(codebase_path: str) -> bool:
+    TIMEOUT_AFTER_X_SEC = 30
     ck_command_arr = get_ck_command_arr(codebase_path)
+
     try:
-        subprocess.run(ck_command_arr, check=True)
+        subprocess.run(ck_command_arr, check=True, timeout=TIMEOUT_AFTER_X_SEC)
+    except subprocess.TimeoutExpired:
+        print(f'Error: command {" ".join(ck_command_arr)} timed out after {TIMEOUT_AFTER_X_SEC} seconds.', file=sys.stderr)
+        return False
     except subprocess.CalledProcessError as e:
         print(f'Error: command {" ".join(ck_command_arr)} returned {e.returncode}.', file=sys.stderr)
+        return False
+
+    return True
 
 
-# FLAGS REF: <use jars:true|false> <max files per partition,0=automatic selection>
-# <variables and fields metrics? True|False>
+# FLAGS REF: <use jars:true|false> <max files per partition,0=auto selection> <variables + fields metrics? true|false>
 def get_ck_command_arr(codebase_path: str, flags: [str] = "true 0 false") -> [str]:
     return ["java", "-jar", CK_JAR_PATH, codebase_path, *flags.split()]
 
