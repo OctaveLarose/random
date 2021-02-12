@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -23,23 +24,17 @@ def get_methods_qty_plot():
     df = pd.read_csv("mega_class.csv")
     # df = pd.read_csv("/home/octavel/bordel/ck_data/class/class_jwtk_jjwt.csv")
 
-    METHOD_GRAPH_CAP = 35
-    print(f"Nbr of classes with less than {len(df.loc[df['totalMethodsQty'] <= METHOD_GRAPH_CAP])}")
-    print(f"Nbr of classes with more than {len(df.loc[df['totalMethodsQty'] > METHOD_GRAPH_CAP])}")
+    METHOD_GRAPH_CAP = 30
+    print(f"Classes with nbr methods <= {METHOD_GRAPH_CAP}: {len(df.loc[df['totalMethodsQty'] <= METHOD_GRAPH_CAP])}")
+    print(f"Classes with nbr methods > {METHOD_GRAPH_CAP}: {len(df.loc[df['totalMethodsQty'] > METHOD_GRAPH_CAP])}")
 
     df = df.loc[df["totalMethodsQty"] <= METHOD_GRAPH_CAP]
 
-    # print(df.columns)
     # max_class = df[df["totalMethodsQty"] == df["totalMethodsQty"].max()]
-    # print(max_class.values)
-    # print(max_class["totalMethodsQty"])
-    # print(type(max_class))
-    # print(max_class["class"])
-    # print(type(max_class["class"][0]))
-    # print(type(max_class["file"][0]))
-    # exit(1)
+
     sns.set_theme(style="darkgrid")
-    plot = sns.displot(data=df, x="totalMethodsQty")
+    bins = np.arange(-1, METHOD_GRAPH_CAP + 1, 1)
+    plot = sns.displot(data=df, x="totalMethodsQty", bins=bins)
     plot.set(xlabel='Number of methods', ylabel='Number of classes')
     # plt.xlim(-1, 30)
     plt.show()
