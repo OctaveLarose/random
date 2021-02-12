@@ -23,10 +23,11 @@ def get_methods_qty_plot():
     df = pd.read_csv("mega_class.csv")
     # df = pd.read_csv("/home/octavel/bordel/ck_data/class/class_jwtk_jjwt.csv")
 
-    # print(df[0])
-    # print(df[1])
-    for i in range(3):
-        df = df.drop([df["totalMethodsQty"].idxmax()])
+    METHOD_GRAPH_CAP = 35
+    print(f"Nbr of classes with less than {len(df.loc[df['totalMethodsQty'] <= METHOD_GRAPH_CAP])}")
+    print(f"Nbr of classes with more than {len(df.loc[df['totalMethodsQty'] > METHOD_GRAPH_CAP])}")
+
+    df = df.loc[df["totalMethodsQty"] <= METHOD_GRAPH_CAP]
 
     # print(df.columns)
     # max_class = df[df["totalMethodsQty"] == df["totalMethodsQty"].max()]
@@ -40,7 +41,7 @@ def get_methods_qty_plot():
     sns.set_theme(style="darkgrid")
     plot = sns.displot(data=df, x="totalMethodsQty")
     plot.set(xlabel='Number of methods', ylabel='Number of classes')
-    plt.xlim(-1, 30)
+    # plt.xlim(-1, 30)
     plt.show()
 
 
