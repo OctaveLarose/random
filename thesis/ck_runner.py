@@ -31,7 +31,7 @@ def main():
 
 
 def run_ck(codebase_path: str) -> bool:
-    TIMEOUT_AFTER_X_SEC = 30
+    TIMEOUT_AFTER_X_SEC = 60
     ck_command_arr = get_ck_command_arr(codebase_path)
 
     try:
