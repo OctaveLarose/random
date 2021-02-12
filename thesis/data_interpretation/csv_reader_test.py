@@ -33,10 +33,12 @@ def get_methods_qty_plot():
     # max_class = df[df["totalMethodsQty"] == df["totalMethodsQty"].max()]
 
     sns.set_theme(style="darkgrid")
-    bins = np.arange(-1, METHOD_GRAPH_CAP + 1, 1)
+    bins = np.arange(-0.5, METHOD_GRAPH_CAP + 1, 1)
     plot = sns.displot(data=df, x="totalMethodsQty", bins=bins)
     plot.set(xlabel='Number of methods', ylabel='Number of classes')
     # plt.xlim(-1, 30)
+    plt.margins(x=0)
+    plt.tight_layout()
     plt.show()
 
 
