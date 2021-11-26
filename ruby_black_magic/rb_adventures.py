@@ -1,4 +1,6 @@
 import subprocess, time, sys, os, inspect, atexit, re
+from pprint import pprint
+
 import msgpack, mprpc
 
 
@@ -162,5 +164,7 @@ if __name__ == "__main__":
         print("GRAPH_HEADER:", graph_header)
         print("NAME:", name)
         print("GRAPH:", graph)
-        print("GRAPH NODES:", graph.nodes())
+        if 'assumptions' in graph_header['props']:
+            print("GRAPH ASSUMPTIONS:", graph_header['props']['assumptions'])
+        # print("GRAPH NODES:", graph.nodes())
         print("###")
