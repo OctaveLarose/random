@@ -151,14 +151,10 @@ if __name__ == "__main__":
 
     while True:
         index = bgv_parser.read_graph_preheader()
-        print(index)
         if not index:
             break
 
-        try:
-            graph_header = bgv_parser.read_graph_header()
-            name = bgv_parser.graph_name(graph_header)
-            graph = bgv_parser.read_graph()
-            print(graph_header, name, graph)
-        except RubyException as ex:
-            print(ex.args, repr(ex.rb_exception))
+        graph_header = bgv_parser.read_graph_header()
+        # name = bgv_parser.graph_name(graph_header)
+        graph = bgv_parser.read_graph()
+        print(graph_header, graph)
