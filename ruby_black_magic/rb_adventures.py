@@ -154,17 +154,23 @@ if __name__ == "__main__":
 
     while True:
         index = bgv_parser.read_graph_preheader()
+
         if not index:
             break
+
         graph_header = bgv_parser.read_graph_header()
         name = bgv_parser.graph_name(graph_header)
         graph = bgv_parser.read_graph()
 
         print("###")
-        print("GRAPH_HEADER:", graph_header)
+        # print("GRAPH_HEADER:", graph_header)
         print("NAME:", name)
         print("GRAPH:", graph)
-        if 'assumptions' in graph_header['props']:
-            print("GRAPH ASSUMPTIONS:", graph_header['props']['assumptions'])
-        # print("GRAPH NODES:", graph.nodes())
+        # print("PROPS:", graph.props())
+        # print("NODES:", graph.nodes())
+        print("NODE LABELS:")
+        for node in graph.nodes().values():
+            print(node.props()['label'])
+        print("EDGES:", graph.edges())
+        print("BLOCKS:", graph.blocks())
         print("###")
