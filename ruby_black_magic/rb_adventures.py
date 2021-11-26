@@ -145,7 +145,8 @@ if __name__ == "__main__":
     rb.require_relative('bgv_parser.rb')
     BGV_PARSER_CLASS = rb.const('BGVParser')
 
-    bgv_parser = BGV_PARSER_CLASS('mandelbrot_innerBenchmarkLoop.bgv')
+    FILENAME = sys.argv[1]
+    bgv_parser = BGV_PARSER_CLASS(FILENAME)
     bgv_parser.read_file_header()
     bgv_parser.skip_document_props()
 
