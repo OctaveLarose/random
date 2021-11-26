@@ -353,10 +353,10 @@ class BGVParser
 
   # Produce a flat graph name from a header.
   def graph_name(graph_header)
-    groups_names = graph_header[:group].map { |g| g[:short_name] }
+    groups_names = (graph_header['group']).map { |g| g[:short_name] }
     count = 0
-    name = graph_header[:format].sub(/%s/) do
-      arg = graph_header[:args][count]
+    name = graph_header['format'].sub(/%s/) do
+      arg = graph_header['args'][count]
       count += 1
       arg
     end

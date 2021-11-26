@@ -153,8 +153,13 @@ if __name__ == "__main__":
         index = bgv_parser.read_graph_preheader()
         if not index:
             break
-
         graph_header = bgv_parser.read_graph_header()
-        # name = bgv_parser.graph_name(graph_header)
+        name = bgv_parser.graph_name(graph_header)
         graph = bgv_parser.read_graph()
-        print(graph_header, graph)
+
+        print("###")
+        print("GRAPH_HEADER:", graph_header)
+        print("NAME:", name)
+        print("GRAPH:", graph)
+        print("GRAPH NODES:", graph.nodes())
+        print("###")
