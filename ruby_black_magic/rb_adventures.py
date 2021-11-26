@@ -142,30 +142,23 @@ class RubySession:
 
 if __name__ == "__main__":
     rb = RubySession()
+    rb.require_relative('bgv_parser.rb')
+    BGV_PARSER_CLASS = rb.const('BGVParser')
 
-    rb.require_relative('bgv_parser')  # load a Ruby library 'sample_class.rb'
-    MyClass = rb.const('BGVParser')  # get a Class defined in 'sample_class.rb'
-    obj = MyClass('mandelbrot_innerBenchmarkLoop.bgv')
-    print(obj, repr(obj))  # when printing a Ruby object, `to_s` method is called
-    print(obj.inspect())  # all Ruby methods are available.
-    print(dir(obj))  # dir invokes `public_methods` in Ruby
-    print(obj.read_file_header())
-    #                                             # You can call Ruby methods with args. Keyword arguments are also available.
-    #
-    # proc = obj.m4('arg of proc')                # a Ruby method that returns a Proc
-    # print( "proc:", proc() )                    # calling proc
-    #
-    # try:
-    #     obj.m2()                                # when an exception happens in Ruby, RubyException is raised
-    # except RubyException as ex:
-    #     print( ex.args, repr(ex.rb_exception) ) # ex.args has a message from the exception object in Ruby.
-    #
-    # d = MyClass.cm5()                           # Hash and Array in Ruby correspond to Dictionary and List in Python
-    # print( d )                                  #   => {1: RubyObject, 2: [1, RubyObject]}
-    #
-    # e = MyClass.cm6()                           # Not only simple Array but an Enumerator is also supported
-    # for i in e:                                 # You can iterate using `for` syntax over an Enumerable
-    #     print(i)
-    #
-    # obj2 = MyClass.cm7( obj )                   # you can pass a RubyObject as an argument
-    # print( obj2 == obj )                        # If two objects refers to the same objects, they are regarded as same.
+    bgv_parser = BGV_PARSER_CLASS('mandelbrot_innerBenchmarkLoop.bgv')
+    bgv_parser.read_file_header()
+    bgv_parser.skip_document_props()
+
+    while True:
+        index = bgv_parser.read_graph_preheader()
+        print(index)
+        if not index:
+            break
+
+        try:
+            graph_header = bgv_parser.read_graph_header()
+            name = bgv_parser.graph_name(graph_header)
+            graph = bgv_parser.read_graph()
+            print(graph_header, name, graph)
+        except RubyException as ex:
+            print(ex.args, repr(ex.rb_exception))
