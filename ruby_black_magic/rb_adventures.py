@@ -31,6 +31,22 @@ def get_node_tree(graph):
     return node_tree
 
 
+def print_recurring_node_groups(supernode_occurrences):
+    for supernode, nbr_found in supernode_occurrences.items():
+        print("{} found:".format(nbr_found))
+        print(supernode)
+    pass
+
+
+def add_supernode_occurrence(supernode_occurrences: dict, new_supernode):
+    for supernode in supernode_occurrences:
+        if are_subtrees_equal(supernode, new_supernode):
+            supernode_occurrences[supernode] += 1
+            return
+
+    supernode_occurrences[new_supernode] = 1
+
+
 def main(argv: [str]):
     rb = RubySession()
     rb.require_relative('bgv_parser.rb')
@@ -60,15 +76,17 @@ def main(argv: [str]):
 
         all_subtrees = []
         for n in node_tree.expand_tree(mode=Tree.DEPTH):
-            all_subtrees.append(node_tree.subtree(n))
+            if len(node_tree.subtree(n).nodes) != 1:  # Dumping single node subtrees
+                all_subtrees.append(node_tree.subtree(n))
 
         permutations = itertools.permutations(all_subtrees, 2)
 
+        supernode_occurrences = {}
         for a, b in permutations:
-            if len(a.nodes) != 1 and are_subtrees_equal(a, b):
-                print(a)
-        # print(permutations)
+            if are_subtrees_equal(a, b):
+                add_supernode_occurrence(supernode_occurrences, a)
 
+        print_recurring_node_groups(supernode_occurrences)
 
         # print(node_tree.subtree(170))
         # print(node_tree.subtree(171))
