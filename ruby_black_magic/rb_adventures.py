@@ -14,6 +14,10 @@ def are_subtrees_equal(subtree1, subtree2) -> bool:
     return True
 
 
+# Dubious moral choice right there, but who's judging
+Tree.__eq__ = are_subtrees_equal
+
+
 def get_node_tree(graph):
     node_tree = Tree()
     parent_node_set = False
@@ -40,7 +44,7 @@ def print_recurring_node_groups(supernode_occurrences):
 
 def add_supernode_occurrence(supernode_occurrences: dict, new_supernode):
     for supernode in supernode_occurrences:
-        if are_subtrees_equal(supernode, new_supernode):
+        if supernode == new_supernode:
             supernode_occurrences[supernode] += 1
             return
 
@@ -83,15 +87,10 @@ def main(argv: [str]):
 
         supernode_occurrences = {}
         for a, b in permutations:
-            if are_subtrees_equal(a, b):
+            if a == b:
                 add_supernode_occurrence(supernode_occurrences, a)
 
         print_recurring_node_groups(supernode_occurrences)
-
-        # print(node_tree.subtree(170))
-        # print(node_tree.subtree(171))
-        # print(node_tree.subtree(172))
-        # print(node_tree.subtree(194))
 
         # print("###")
         # # print("GRAPH_HEADER:", graph_header)
